@@ -82,25 +82,36 @@ void processInput(GLFWwindow *window)
         aim -= speed * right;
     }
 
-    glfwGetCursorPos(window, &mousex, &mousey);
+    // glfwGetCursorPos(window, &mousex, &mousey);
    
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-        last_mouse_event = 0;
+    // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+    //     last_mouse_event = 0;
    
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-    {
-        if (last_mouse_event == 0)
-        {
-            mousex_last = mousex;
-            mousey_last = mousey;
-            last_mouse_event = 1;           
-        }
-        else
-        {   
-            float xdiff = (mousex - mousex_last)/width;
-            float ydiff = (mousey - mousey_last)/height;
+    // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    // {
+        // if (last_mouse_event == 0)
+        // {
+        //     mousex_last = mousex;
+        //     mousey_last = mousey;
+        //     last_mouse_event = 1;           
+        // }
+        // else
+        // {   
+            // mousex = joystick_axes[3];
+            // mousey = joystick_axes[2];
+
+            // float xdiff = (mousex - mousex_last)/width;
+            float xdiff = 0;
+            if (std::abs(joystick_axes[3]) > joystick_threshold)
+                xdiff = joystick_axes[3];
+            float ydiff = 0;
+            if (std::abs(joystick_axes[4]) > joystick_threshold)
+                ydiff = joystick_axes[4];
+
+            // float ydiff = (mousey - mousey_last)/height;
             
-            float sensitivity = 50.0f; // Tune sensitivity
+            // float sensitivity = 50.0f; // Tune sensitivity
+            float sensitivity = 0.5f; // Tune sensitivity
             yaw += xdiff * sensitivity;
             pitch -= ydiff * sensitivity; // Invert Y for natural movement
 
@@ -116,11 +127,11 @@ void processInput(GLFWwindow *window)
             
             // std::cout << "xdiff" << xdiff << std::endl;
 
-            mousex_last = mousex;
-            mousey_last = mousey;
-        }
+            // mousex_last = mousex;
+            // mousey_last = mousey;
+        // }
         
-    }
+    // }
     std::cout << "AIM: " << aim.x << ", " << aim.y << ", " << aim.z << ", (mousex =" << mousex << std::endl;
 }
 
