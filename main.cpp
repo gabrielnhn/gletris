@@ -9,8 +9,17 @@
 # define M_PI 3.14159265358979323846
 
 
+// int i = 0;
+// float vx = 0.012;
+float vx = 0;
+// float vy = 0.013;
+float vy = 0;
+
 int axes_count;
 const float* joystick_axes;
+
+const unsigned char* buttons;
+int buttons_count;
 
 float farDistance=50.0f;
 auto camera = glm::vec3(0, 0, 3);
@@ -31,9 +40,6 @@ glm::mat4 mvp;
 
 glm::mat3x3 right_transform = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 
-
-
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -44,12 +50,32 @@ void processInput(GLFWwindow *window)
 
     float joystick_threshold = 0.3f;
 
-    joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count); 
+    joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count);
+    int count;
+    buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_3, &buttons_count); 
 
     std::cout << "joystick_axes " << axes_count << std::endl;
     for(int k = 0; k < axes_count; k++)
     {
         std::cout << "\t axis " << k << ": " << joystick_axes[k] << std::endl;
+    }
+
+    GLFWgamepadstate state;
+ 
+    if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
+    {
+        if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
+        {
+            vx = 0.3f;
+        }
+
+        if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
+        {
+            vx = 0.0f;
+        }
+        // else
+        //     vx = 0.0f;
+        
     }
 
 
@@ -81,6 +107,16 @@ void processInput(GLFWwindow *window)
         camera -= speed * right;
         aim -= speed * right;
     }
+    
+    
+    // if(glfwGetKey(window, GLFW_GAMEPAD_BUTTON_DPAD_LEFT) == GLFW_PRESS)
+    // {
+    //     vx = 0.3f;
+    //     std::cout << "REGISTERED LEFTBUT" << std::endl;
+    // }
+    // else
+    //     vx = 0.0f;
+
 
     // glfwGetCursorPos(window, &mousex, &mousey);
    
@@ -268,11 +304,6 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    // int i = 0;
-    // float vx = 0.012;
-    float vx = 0;
-    // float vy = 0.013;
-    float vy = 0;
     // bool goingright = true;
     int j = 0;
     glClearColor(0.2f, 0.2f, 0.2f, 0.5f);
