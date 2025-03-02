@@ -18,7 +18,7 @@ const unsigned char* buttons;
 int buttons_count;
 
 float farDistance= 300.0f;
-auto camera = glm::vec3(0.0f, 0.0f, 200.0f);
+auto camera = glm::vec3(0.0f, 0.0f, 50.0f);
 auto aim = glm::vec3(0, 0, 0);
 
 double mousex, mousey;
@@ -58,11 +58,11 @@ void processInput(GLFWwindow *window)
  
     if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state))
     {
-        if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
-        {
-            vx = 0.3f;
-            vy = 0.3f;
-        }
+        // if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
+        // {
+        //     vx = 0.3f;
+        //     vy = 0.3f;
+        // }
 
         if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
         {
@@ -154,9 +154,12 @@ void processInput(GLFWwindow *window)
         // }
         
     // }
+
+    // camera.y = std::max(0.0f, camera.y);
+    camera.y = 0.0f;
+
     std::cout << "AIM: " << aim.x << ", " << aim.y << ", " << aim.z << ", (mousex =" << mousex << std::endl;
 }
-
 
 
 int main()
@@ -185,16 +188,15 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
 
-
     std::vector<glm::vec4> vertices = {
-        {-0.1f, 0.1f, -0.1f, 0.1},
-        {0.1f,  0.1f, -0.1f, 0.1},
-        {-0.1f, -0.1f, -0.1f, 0.1},
-        {0.1f, -0.1f, -0.1f, 0.1},
-        {-0.1f, 0.1f, 0.1f, 0.1},
-        {0.1f,  0.1f, 0.1f, 0.1},
-        {-0.1f, -0.1f, 0.1f, 0.1},
-        {0.1f, -0.1f, 0.1f, 0.1},
+        {-0.1f,1.0+ 0.1f, -0.1f, 0.1f},
+        {0.1f, 1.0+ 0.1f, -0.1f, 0.1f},
+        {-0.1f,1.0+ -0.1f, -0.1f, 0.1f},
+        {0.1f, 1.0+-0.1f, -0.1f, 0.1f},
+        {-0.1f,1.0+ 0.1f, 0.1f, 0.1f},
+        {0.1f, 1.0+ 0.1f, 0.1f, 0.1f},
+        {-0.1f,1.0+ -0.1f, 0.1f, 0.1f},
+        {0.1f, 1.0+-0.1f, 0.1f, 0.1f},
     };  
 
     //fuck it perspective
@@ -291,43 +293,26 @@ int main()
     {
 
         j++;
-        if (j % 5 == 0)
-        // if (true)
+        // if (j % 5 == 0)
+        if (true)
         {
-            const float BOUND = 5.0f;
+            const float BOUND = 0.0f;
 
-            if (vertices[2].y < -BOUND)
+            if (vertices[2].y <= BOUND)
             {
-                vy = -vy;
-                glClearColor(0.8f, 0.2f, 0.2f, 1.0f);
+                vy = 0;
             }
                 
-            if (vertices[0].y >= BOUND)
+            if (vertices[0].y > BOUND)
             {
-                vy = - vy;
+                vy = -0.003;
                 glClearColor(0.2f, 0.5f, 0.2f, 1.0f);
-            }
-
-            if (vertices[1].x > BOUND)
-            {
-                vx = -vx;
-                glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
-
-            }
-
-            if (vertices[0].x < -BOUND)
-            {
-                vx = -vx;
-                glClearColor(0.9f, 0.3f, 0.0f, 1.0f);
             }
 
             for(long unsigned int k=0; k < vertices.size(); k++)
             {
                 vertices[k].x += vx;
                 vertices[k].y += vy;
-             
-                // std::cout << k << ": " << vertices[k].y << std::endl;
-                
             }
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
