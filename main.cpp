@@ -8,10 +8,7 @@
 
 # define M_PI 3.14159265358979323846
 
-// int i = 0;
-// float vx = 0.012;
 float vx = 0;
-// float vy = 0.013;
 float vy = 0;
 
 int axes_count;
@@ -20,8 +17,8 @@ const float* joystick_axes;
 const unsigned char* buttons;
 int buttons_count;
 
-float farDistance=50.0f;
-auto camera = glm::vec3(0, 0, 3);
+float farDistance= 300.0f;
+auto camera = glm::vec3(0.0f, 0.0f, 200.0f);
 auto aim = glm::vec3(0, 0, 0);
 
 double mousex, mousey;
@@ -74,7 +71,6 @@ void processInput(GLFWwindow *window)
         }
     }
 
-
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
@@ -83,25 +79,29 @@ void processInput(GLFWwindow *window)
     glm::vec3 right = right_transform * forward; // Forward direction
 
 
-    if((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) or (joystick_axes[1] > joystick_threshold))
+    if (axes_count > 0)
     {
-        camera -= speed * forward;
-        aim -= speed * forward;
-    }
-    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS or (joystick_axes[1] < -joystick_threshold))
-    {
-        camera += speed * forward;
-        aim += speed * forward;
-    }
-    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS or (joystick_axes[0] > joystick_threshold))
-    {
-        camera += speed * right;
-        aim += speed * right;
-    }
-    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS or (joystick_axes[0] < -joystick_threshold))
-    {
-        camera -= speed * right;
-        aim -= speed * right;
+        
+        if((glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) or (joystick_axes[1] > joystick_threshold))
+        {
+            camera -= speed * forward;
+            aim -= speed * forward;
+        }
+        if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS or (joystick_axes[1] < -joystick_threshold))
+        {
+            camera += speed * forward;
+            aim += speed * forward;
+        }
+        if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS or (joystick_axes[0] > joystick_threshold))
+        {
+            camera += speed * right;
+            aim += speed * right;
+        }
+        if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS or (joystick_axes[0] < -joystick_threshold))
+        {
+            camera -= speed * right;
+            aim -= speed * right;
+        }
     }
     
     // glfwGetCursorPos(window, &mousex, &mousey);
@@ -187,14 +187,14 @@ int main()
 
 
     std::vector<glm::vec4> vertices = {
-        {-1.0f, 1.0f, -1.0f, 1.0},
-        {1.0f,  1.0f, -1.0f, 1.0},
-        {-1.0f, -1.0f, -1.0f, 1.0},
-        {1.0f, -1.0f, -1.0f, 1.0},
-        {-1.0f, 1.0f, 1.0f, 1.0},
-        {1.0f,  1.0f, 1.0f, 1.0},
-        {-1.0f, -1.0f, 1.0f, 1.0},
-        {1.0f, -1.0f, 1.0f, 1.0},
+        {-0.1f, 0.1f, -0.1f, 0.1},
+        {0.1f,  0.1f, -0.1f, 0.1},
+        {-0.1f, -0.1f, -0.1f, 0.1},
+        {0.1f, -0.1f, -0.1f, 0.1},
+        {-0.1f, 0.1f, 0.1f, 0.1},
+        {0.1f,  0.1f, 0.1f, 0.1},
+        {-0.1f, -0.1f, 0.1f, 0.1},
+        {0.1f, -0.1f, 0.1f, 0.1},
     };  
 
     //fuck it perspective
@@ -203,11 +203,9 @@ int main()
 
     glm::mat4 view = glm::lookAt(camera, aim, glm::vec3(0, 1, 0));
 
-
     glm::mat4 model = glm::mat4(1.0f);
 
     mvp = projection * view * model;
-    
 
     std::vector<glm::vec3> gl_vertices;
 
@@ -247,13 +245,10 @@ int main()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(int), &indices.front(), GL_DYNAMIC_DRAW); 
 
     const char *vertexShaderSourceGLSLCode = "#version 330 core\n"
-        // "layout (location = 0) in vec3 aPos;\n"
         "layout (location = 0) in vec4 aPos;\n"
         "uniform mat4 mvp;\n"
         "void main()\n"
         "{\n"
-        // "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        // "   gl_Position = mvp * vec4    (aPos, 1.0);\n"
         "   gl_Position = mvp * aPos;\n"
         "}\0";
     
@@ -290,15 +285,14 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    // bool goingright = true;
     int j = 0;
     glClearColor(0.2f, 0.2f, 0.2f, 0.5f);
     while(!glfwWindowShouldClose(window))
     {
 
         j++;
-        // if (j % 5 == 0)
-        if (true)
+        if (j % 5 == 0)
+        // if (true)
         {
             const float BOUND = 5.0f;
 
