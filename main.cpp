@@ -8,7 +8,6 @@
 
 # define M_PI 3.14159265358979323846
 
-
 // int i = 0;
 // float vx = 0.012;
 float vx = 0;
@@ -51,8 +50,6 @@ void processInput(GLFWwindow *window)
     float joystick_threshold = 0.3f;
 
     joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count);
-    int count;
-    buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_3, &buttons_count); 
 
     std::cout << "joystick_axes " << axes_count << std::endl;
     for(int k = 0; k < axes_count; k++)
@@ -67,15 +64,14 @@ void processInput(GLFWwindow *window)
         if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_LEFT])
         {
             vx = 0.3f;
+            vy = 0.3f;
         }
 
         if (state.buttons[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT])
         {
             vx = 0.0f;
+            vy = 0.0f;
         }
-        // else
-        //     vx = 0.0f;
-        
     }
 
 
@@ -108,16 +104,6 @@ void processInput(GLFWwindow *window)
         aim -= speed * right;
     }
     
-    
-    // if(glfwGetKey(window, GLFW_GAMEPAD_BUTTON_DPAD_LEFT) == GLFW_PRESS)
-    // {
-    //     vx = 0.3f;
-    //     std::cout << "REGISTERED LEFTBUT" << std::endl;
-    // }
-    // else
-    //     vx = 0.0f;
-
-
     // glfwGetCursorPos(window, &mousex, &mousey);
    
     // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
