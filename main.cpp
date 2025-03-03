@@ -102,59 +102,59 @@ void processInput(GLFWwindow *window)
             camera -= speed * right;
             aim -= speed * right;
         }
-    }
-    
-    // glfwGetCursorPos(window, &mousex, &mousey);
-   
-    // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
-    //     last_mouse_event = 0;
-   
-    // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-    // {
-        // if (last_mouse_event == 0)
-        // {
-        //     mousex_last = mousex;
-        //     mousey_last = mousey;
-        //     last_mouse_event = 1;           
-        // }
-        // else
-        // {   
-            // mousex = joystick_axes[3];
-            // mousey = joystick_axes[2];
-
-            // float xdiff = (mousex - mousex_last)/width;
-            float xdiff = 0;
-            if (std::abs(joystick_axes[3]) > joystick_threshold)
-                xdiff = joystick_axes[3];
-            float ydiff = 0;
-            if (std::abs(joystick_axes[4]) > joystick_threshold)
-                ydiff = joystick_axes[4];
-
-            // float ydiff = (mousey - mousey_last)/height;
-            
-            // float sensitivity = 50.0f; // Tune sensitivity
-            float sensitivity = 0.5f; // Tune sensitivity
-            yaw += xdiff * sensitivity;
-            pitch -= ydiff * sensitivity; // Invert Y for natural movement
-
-            pitch = glm::clamp(pitch, -89.0f, 89.0f); // Prevent flipping
-            
-            glm::vec3 direction;
-            direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-            direction.y = sin(glm::radians(pitch));
-            direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-            aim = camera + direction;
-            
-            
-            // std::cout << "xdiff" << xdiff << std::endl;
-
-            // mousex_last = mousex;
-            // mousey_last = mousey;
-        // }
         
-    // }
-
+        // glfwGetCursorPos(window, &mousex, &mousey);
+        
+        // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+        //     last_mouse_event = 0;
+        
+        // if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        // {
+            // if (last_mouse_event == 0)
+            // {
+                //     mousex_last = mousex;
+                //     mousey_last = mousey;
+                //     last_mouse_event = 1;           
+                // }
+                // else
+                // {   
+                    // mousex = joystick_axes[3];
+                    // mousey = joystick_axes[2];
+                    
+                    // float xdiff = (mousex - mousex_last)/width;
+                    float xdiff = 0;
+                    if (std::abs(joystick_axes[3]) > joystick_threshold)
+                    xdiff = joystick_axes[3];
+                    float ydiff = 0;
+                    if (std::abs(joystick_axes[4]) > joystick_threshold)
+                    ydiff = joystick_axes[4];
+                    
+                    // float ydiff = (mousey - mousey_last)/height;
+                    
+                    // float sensitivity = 50.0f; // Tune sensitivity
+                    float sensitivity = 0.5f; // Tune sensitivity
+                    yaw += xdiff * sensitivity;
+                    pitch -= ydiff * sensitivity; // Invert Y for natural movement
+                    
+                    pitch = glm::clamp(pitch, -89.0f, 89.0f); // Prevent flipping
+                    
+                    glm::vec3 direction;
+                    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+                    direction.y = sin(glm::radians(pitch));
+                    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+                    
+                    aim = camera + direction;
+                    
+                    
+                    // std::cout << "xdiff" << xdiff << std::endl;
+                    
+                    // mousex_last = mousex;
+                    // mousey_last = mousey;
+                    // }
+                    
+                    // }
+    }
+                    
     // camera.y = std::max(0.0f, camera.y);
     camera.y = 0.0f;
 
@@ -189,14 +189,14 @@ int main()
 
 
     std::vector<glm::vec4> vertices = {
-        {-0.1f,1.0+ 0.1f, -0.1f, 0.1f},
-        {0.1f, 1.0+ 0.1f, -0.1f, 0.1f},
-        {-0.1f,1.0+ -0.1f, -0.1f, 0.1f},
-        {0.1f, 1.0+-0.1f, -0.1f, 0.1f},
-        {-0.1f,1.0+ 0.1f, 0.1f, 0.1f},
-        {0.1f, 1.0+ 0.1f, 0.1f, 0.1f},
-        {-0.1f,1.0+ -0.1f, 0.1f, 0.1f},
-        {0.1f, 1.0+-0.1f, 0.1f, 0.1f},
+        {-0.1f, 0.1f, -0.1f, 0.1f},
+        {0.1f,  0.1f, -0.1f, 0.1f},
+        {-0.1f, -0.1f, -0.1f, 0.1f},
+        {0.1f, -0.1f, -0.1f, 0.1f},
+        {-0.1f, 0.1f, 0.1f, 0.1f},
+        {0.1f,  0.1f, 0.1f, 0.1f},
+        {-0.1f, -0.1f, 0.1f, 0.1f},
+        {0.1f, -0.1f, 0.1f, 0.1f},
     };  
 
     //fuck it perspective
@@ -249,32 +249,104 @@ int main()
     const char *vertexShaderSourceGLSLCode = "#version 330 core\n"
         "layout (location = 0) in vec4 aPos;\n"
         "uniform mat4 mvp;\n"
+        "out vec4 geomPos;\n" // added
         "void main()\n"
         "{\n"
-        "   gl_Position = mvp * aPos;\n"
+        // "   gl_Position = mvp * aPos;\n"
+        "   geomPos = aPos;\n"
+        "}\0";
+
+        const char* geometryShaderSource = "#version 330 core\n"
+        "layout (triangles) in;\n"
+        "layout (triangle_strip, max_vertices = 3) out;\n"
+        "\n"
+        "in vec4 geomPos[]; // Input positions from vertex shader\n"
+        "out vec3 normal; // Output normal\n"
+        "out vec4 fragPos; // Output fragment position\n"
+        "\n"
+        "uniform mat4 mvp;\n"
+        "\n"
+        "void main() {\n"
+        "    vec3 v1 = geomPos[0].xyz;\n"
+        "    vec3 v2 = geomPos[1].xyz;\n"
+        "    vec3 v3 = geomPos[2].xyz;\n"
+        "\n"
+        "    vec3 edge1 = v2 - v1;\n"
+        "    vec3 edge2 = v3 - v1;\n"
+        "    vec3 triangleNormal = normalize(cross(edge1, edge2));\n"
+        "\n"
+        "    for (int i = 0; i < 3; i++) {\n"
+        "        normal = triangleNormal;\n"
+        "        fragPos = geomPos[i];\n"
+        "        gl_Position = mvp * geomPos[i]; // Apply MVP transform\n"
+        "        EmitVertex();\n"
+        "    }\n"
+        "    EndPrimitive();\n"
         "}\0";
     
-    const char *fragShaderSourceGLSLCode = "#version 330 core\n"
+    
+    const char *fragShaderSourceGLSLCode =
+        "#version 330 core\n"
+        "in vec3 normal;\n"
+        "in vec4 fragPos;\n"
+        "uniform vec3 object_color;\n"
+        "uniform vec3 ambient_light;\n"
+        "uniform vec3 light_pos;\n"
         "out vec4 FragColor;\n"
         "void main()\n"
         "{\n"
-            "FragColor = vec4(0.2f, 0.9f, 0.2f, 1.0f);\n"
+            "vec3 light_dir = normalize(light_pos - fragPos.xyz);\n" // Corrected light direction calculation
+            "vec3 ambient = ambient_light * object_color;\n"
+            "float diffuse_ang = max(0.0f, dot(normal, light_dir));\n"
+            "vec3 diffuse = diffuse_ang * object_color;\n"
+            "FragColor = vec4((ambient + diffuse)*object_color, 1.0);\n"
         "}\0";
     
+    int success;
+    char infoLog[512];
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSourceGLSLCode, NULL);
     glCompileShader(vertexShader);
     //
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+
     unsigned int fragShader;
     fragShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragShader, 1, &fragShaderSourceGLSLCode, NULL);
     glCompileShader(fragShader);
     //
+    glGetShaderiv(fragShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(fragShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAG::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    unsigned int geometryShader;
+    geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+    glShaderSource(geometryShader, 1, &geometryShaderSource, NULL);
+    glCompileShader(geometryShader);
+    glGetShaderiv(geometryShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+   
+    
+
+
+    //
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, geometryShader);
     glAttachShader(shaderProgram, fragShader);
 
     glLinkProgram(shaderProgram);
@@ -283,6 +355,10 @@ int main()
 
     int mvpLocation = glGetUniformLocation(shaderProgram, "mvp");
     glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+
+    glUniform3f(glGetUniformLocation(shaderProgram, "object_color"), 1.0f, 0.5f, 0.5f); 
+    glUniform3f(glGetUniformLocation(shaderProgram, "ambient_light"), 0.2f, 0.2f, 0.2f); 
+    // glUniform3f(glGetUniformLocation(shaderProgram, "light_pos"), 0.0f, 1.0f, 0.0f); 
 
 
     glEnable(GL_DEPTH_TEST);
@@ -293,7 +369,6 @@ int main()
     {
 
         j++;
-        // if (j % 5 == 0)
         if (true)
         {
             const float BOUND = 0.0f;
@@ -306,7 +381,6 @@ int main()
             if (vertices[0].y > BOUND)
             {
                 vy = -0.003;
-                glClearColor(0.2f, 0.5f, 0.2f, 1.0f);
             }
 
             for(long unsigned int k=0; k < vertices.size(); k++)
@@ -323,8 +397,8 @@ int main()
         // remake projection
         view = glm::lookAt(camera, aim, glm::vec3(0, 1, 0));
         glm::mat4 mvp = projection * view * model;
-        int mvpLocation = glGetUniformLocation(shaderProgram, "mvp");
-        glUniformMatrix4fv(mvpLocation, 1, GL_FALSE, glm::value_ptr(mvp));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
+        glUniform3f(glGetUniformLocation(shaderProgram, "light_pos"), camera.x, camera.y, camera.z);
 
 
         processInput(window);
