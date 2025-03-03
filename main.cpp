@@ -11,6 +11,10 @@
 float vx = 0;
 float vy = 0;
 
+float aspectRatio = 1.0f;
+float fov = glm::radians(45.0f);
+
+
 int axes_count;
 const float* joystick_axes;
 
@@ -36,9 +40,14 @@ glm::mat4 mvp;
 
 glm::mat3x3 right_transform = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow* window, int ww, int hh)
 {
+    height = hh;
+    width = ww;
     glViewport(0, 0, width, height);
+
+    aspectRatio = width/height;
+    std::cout << "aspectRatio" << aspectRatio << std::endl;
 }  
 
 void processInput(GLFWwindow *window)
@@ -48,11 +57,11 @@ void processInput(GLFWwindow *window)
 
     joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count);
 
-    std::cout << "joystick_axes " << axes_count << std::endl;
-    for(int k = 0; k < axes_count; k++)
-    {
-        std::cout << "\t axis " << k << ": " << joystick_axes[k] << std::endl;
-    }
+    // std::cout << "joystick_axes " << axes_count << std::endl;
+    // for(int k = 0; k < axes_count; k++)
+    // {
+    //     std::cout << "\t axis " << k << ": " << joystick_axes[k] << std::endl;
+    // }
 
     GLFWgamepadstate state;
  
@@ -158,7 +167,7 @@ void processInput(GLFWwindow *window)
     // camera.y = std::max(0.0f, camera.y);
     camera.y = 0.0f;
 
-    std::cout << "AIM: " << aim.x << ", " << aim.y << ", " << aim.z << ", (mousex =" << mousex << std::endl;
+    // std::cout << "AIM: " << aim.x << ", " << aim.y << ", " << aim.z << ", (mousex =" << mousex << std::endl;
 }
 
 
@@ -189,19 +198,24 @@ int main()
 
 
     std::vector<glm::vec4> vertices = {
-        {-0.1f, +0.1f, -0.1f, 1.0f},
-        {+0.1f, +0.1f, -0.1f, 1.0f},
-        {-0.1f, -0.1f, -0.1f, 1.0f},
-        {+0.1f, -0.1f, -0.1f, 1.0f},
-        {-0.1f, +0.1f, +0.1f, 1.0f},
-        {+0.1f, +0.1f, +0.1f, 1.0f},
-        {-0.1f, -0.1f, +0.1f, 1.0f},
-        {+0.1f, -0.1f, +0.1f, 1.0f},
+        {-0.1f, +0.2f, -0.1f, 1.0f},
+        {+0.1f, +0.2f, -0.1f, 1.0f},
+        {-0.1f, +0.0f, -0.1f, 1.0f},
+        {+0.1f, +0.0f, -0.1f, 1.0f},
+        {-0.1f, +0.2f, +0.1f, 1.0f},
+        {+0.1f, +0.2f, +0.1f, 1.0f},
+        {-0.1f, +0.0f, +0.1f, 1.0f},
+        {+0.1f, +0.0f, +0.1f, 1.0f},
+
+        {-10.0f, 0.0f, -10.0f, 1.0f}, // 8
+        {+10.0f, 0.0f, -10.0f, 1.0f}, // 9
+        {-10.0f, 0.0f, +10.0f, 1.0f}, // 10
+        {+10.0f, 0.0f, +10.0f, 1.0f}, // 11
     };  
 
     //fuck it perspective
 
-    glm::mat4 projection = glm::perspective(glm::radians(30.0f), 1.0f, 0.1f, farDistance);
+    glm::mat4 projection = glm::perspective(fov, aspectRatio, 0.1f, farDistance);
 
     glm::mat4 view = glm::lookAt(camera, aim, glm::vec3(0, 1, 0));
 
@@ -243,6 +257,8 @@ int main()
         0,1,5,
         4,6,5,
         5,6,7,
+        8,9,10,
+        9,11,10,
     };
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(int), &indices.front(), GL_DYNAMIC_DRAW); 
 
@@ -364,7 +380,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     int j = 0;
-    glClearColor(0.2f, 0.2f, 0.2f, 0.5f);
+    glClearColor(0.4f, 0.6f, 0.8f, 0.5f);
     while(!glfwWindowShouldClose(window))
     {
 
@@ -395,6 +411,7 @@ int main()
         }
 
         // remake projection
+        projection = glm::perspective(glm::radians(30.0f), aspectRatio, 0.1f, farDistance);
         view = glm::lookAt(camera, aim, glm::vec3(0, 1, 0));
         glm::mat4 mvp = projection * view * model;
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
