@@ -17,8 +17,8 @@ const float* joystick_axes;
 const unsigned char* buttons;
 int buttons_count;
 
-float farDistance= 300.0f;
-auto camera = glm::vec3(0.0f, 0.0f, 50.0f);
+float farDistance= 30.0f;
+auto camera = glm::vec3(0.0f, 0.0f, 2.0f);
 auto aim = glm::vec3(0, 0, 0);
 
 double mousex, mousey;
@@ -28,7 +28,7 @@ int last_mouse_event = GLFW_RELEASE;
 double height = 800;
 double width = 800;
 
-float speed = 0.02f;
+float speed = 0.01f;
 
 static float yaw = -90.0f; // Start facing forward
 static float pitch = 0.0f;
@@ -132,7 +132,7 @@ void processInput(GLFWwindow *window)
                     // float ydiff = (mousey - mousey_last)/height;
                     
                     // float sensitivity = 50.0f; // Tune sensitivity
-                    float sensitivity = 0.5f; // Tune sensitivity
+                    float sensitivity = 0.59f; // Tune sensitivity
                     yaw += xdiff * sensitivity;
                     pitch -= ydiff * sensitivity; // Invert Y for natural movement
                     
@@ -189,14 +189,14 @@ int main()
 
 
     std::vector<glm::vec4> vertices = {
-        {-0.1f, 0.1f, -0.1f, 0.1f},
-        {0.1f,  0.1f, -0.1f, 0.1f},
-        {-0.1f, -0.1f, -0.1f, 0.1f},
-        {0.1f, -0.1f, -0.1f, 0.1f},
-        {-0.1f, 0.1f, 0.1f, 0.1f},
-        {0.1f,  0.1f, 0.1f, 0.1f},
-        {-0.1f, -0.1f, 0.1f, 0.1f},
-        {0.1f, -0.1f, 0.1f, 0.1f},
+        {-0.1f, +0.1f, -0.1f, 1.0f},
+        {+0.1f, +0.1f, -0.1f, 1.0f},
+        {-0.1f, -0.1f, -0.1f, 1.0f},
+        {+0.1f, -0.1f, -0.1f, 1.0f},
+        {-0.1f, +0.1f, +0.1f, 1.0f},
+        {+0.1f, +0.1f, +0.1f, 1.0f},
+        {-0.1f, -0.1f, +0.1f, 1.0f},
+        {+0.1f, -0.1f, +0.1f, 1.0f},
     };  
 
     //fuck it perspective
@@ -232,16 +232,16 @@ int main()
 
     std::vector<int> indices = {
         0,1,2,
-        1,2,3,
-        0,4,6,
+        1,3,2,
         0,2,6,
-        2,6,7,
+        0,6,4,
         2,3,7,
-        1,3,7,
+        2,7,6,
+        1,7,3,
         1,5,7,
-        0,1,4,
+        0,4,1,
         0,1,5,
-        4,5,6,
+        4,6,5,
         5,6,7,
     };
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(int), &indices.front(), GL_DYNAMIC_DRAW); 
