@@ -22,8 +22,8 @@ const unsigned char* buttons;
 int buttons_count;
 
 float farDistance= 30.0f;
-auto camera = glm::vec3(0.0f, 0.0f, 2.0f);
-auto aim = glm::vec3(0, 0, 0);
+auto camera = glm::vec3(0.0f, 0.5f, 2.0f);
+auto aim = glm::vec3(0.0f, 0.5f, 0.0f);
 
 double mousex, mousey;
 double mousex_last, mousey_last;
@@ -165,7 +165,7 @@ void processInput(GLFWwindow *window)
     }
                     
     // camera.y = std::max(0.0f, camera.y);
-    camera.y = 0.0f;
+    camera.y = 0.5f;
 
     // std::cout << "AIM: " << aim.x << ", " << aim.y << ", " << aim.z << ", (mousex =" << mousex << std::endl;
 }
@@ -247,16 +247,22 @@ int main()
     std::vector<int> indices = {
         0,1,2,
         1,3,2,
+
         0,2,6,
         0,6,4,
+
         2,3,7,
         2,7,6,
+        
         1,7,3,
         1,5,7,
+        
         0,4,1,
-        0,1,5,
+        4,5,1,
+        
         4,6,5,
         5,6,7,
+        
         8,9,10,
         9,11,10,
     };
@@ -353,11 +359,6 @@ int main()
         glGetShaderInfoLog(geometryShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
-
-   
-    
-
-
     //
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
@@ -399,11 +400,12 @@ int main()
                 vy = -0.003;
             }
 
-            for(long unsigned int k=0; k < vertices.size(); k++)
-            {
-                vertices[k].x += vx;
-                vertices[k].y += vy;
-            }
+            // for(long unsigned int k=8; k < vertices.size(); k++)
+            // // // for(long unsigned int k=0; k < 8; k++)
+            // {
+            //     vertices[k].x += vx;
+            //     vertices[k].y += vy;
+            // }
 
             glBindBuffer(GL_ARRAY_BUFFER, VBO);
             glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(glm::vec4), &vertices.front(), GL_DYNAMIC_DRAW);
